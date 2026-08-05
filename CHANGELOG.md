@@ -5,6 +5,23 @@ All notable changes to this library will be documented in this file:
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [v4.7.4](https://github.com/codeigniter4/translations/compare/v4.7.2...v4.7.4) - 2026-08-05
+
+### Changed
+
+- de (German)
+- ko (Korean)
+- nl (Dutch)
+- sv-SE (Swedish)
+
+### Others
+
+- chore(deps): bump shivammathur/setup-php in the actions group (#545)
+- chore(deps): bump the actions group across 1 directory with 2 updates (#548)
+- chore(deps): bump the actions group with 2 updates (#551)
+- Replace the nightly build cron with an upstream language baseline check
+- chore(deps): bump the actions group across 1 directory with 3 updates (#555)
+
 ## [v4.7.2](https://github.com/codeigniter4/translations/compare/v4.7.0...v4.7.2) - 2026-04-21
 
 ### Added
