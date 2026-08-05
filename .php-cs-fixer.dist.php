@@ -26,6 +26,7 @@ $finder = Finder::create()
         'bin/generate-page',
         'bin/test',
         'bin/update-en-comments',
+        'bin/update-upstream-baseline',
     ]);
 
 $overrides = [

@@ -2,6 +2,7 @@
 
 [![build](https://github.com/codeigniter4/translations/actions/workflows/build.yml/badge.svg)](https://github.com/codeigniter4/translations/actions/workflows/build.yml)
 [![code style](https://github.com/codeigniter4/translations/actions/workflows/code-style.yml/badge.svg)](https://github.com/codeigniter4/translations/actions/workflows/code-style.yml)
+[![upstream](https://github.com/codeigniter4/translations/actions/workflows/upstream.yml/badge.svg)](https://github.com/codeigniter4/translations/actions/workflows/upstream.yml)
 [![Latest Stable Version](https://poser.pugx.org/codeigniter4/translations/v)](//packagist.org/packages/codeigniter4/translations)
 [![Total Downloads](https://poser.pugx.org/codeigniter4/translations/downloads)](//packagist.org/packages/codeigniter4/translations)
 [![License](https://poser.pugx.org/codeigniter4/translations/license)](//packagist.org/packages/codeigniter4/translations)

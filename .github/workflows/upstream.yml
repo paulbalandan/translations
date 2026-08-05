@@ -1,59 +1,54 @@
-name: build
+name: upstream
 
 on:
+  schedule:
+    - cron: '0 3 * * *'
   push:
     branches:
       - develop
     paths:
-      - Language/**
-      - tests/Language/**
-      - .github/scripts/continuous-integration
-      - .github/workflows/build.yml
+      - tests/Upstream/**
+      - .github/workflows/upstream.yml
   pull_request:
     branches:
       - develop
     paths:
-      - Language/**
-      - tests/Language/**
-      - .github/scripts/continuous-integration
-      - .github/workflows/build.yml
+      - tests/Upstream/**
+      - .github/workflows/upstream.yml
+  workflow_dispatch:
 
 permissions:
   contents: read
 
 concurrency:
-  group: build-${{ github.ref }}
+  group: upstream-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
-  main:
-    name: Build [PHP ${{ matrix.php-version }}]
+  baseline:
+    name: Upstream Language Baseline [PHP ${{ matrix.php-version }}]
     runs-on: ubuntu-24.04
     if: github.repository == 'codeigniter4/translations'
-    timeout-minutes: 20
+    timeout-minutes: 15
 
     strategy:
       fail-fast: false
+      # Run only on the highest supported PHP version to reduce API load
       matrix:
-        php-version: ['8.2', '8.3', '8.4', '8.5']
+        php-version: ['8.5']
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
         with:
-          fetch-depth: 2
           persist-credentials: false
 
-      - name: Checkout other refs
-        run: |
-          git fetch --no-tags --prune origin +refs/heads/*:refs/remotes/origin/*
-
       - name: Setup PHP
-        uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # 2.37.2
+        uses: shivammathur/setup-php@accd6127cb78bee3e8082180cb391013d204ef9f # 2.37.0
         with:
           php-version: ${{ matrix.php-version }}
           extensions: intl, mbstring
-          coverage: xdebug
+          coverage: none
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -62,7 +57,7 @@ jobs:
         run: echo "COMPOSER_CACHE_FILES_DIR=$(composer config cache-files-dir)" >> $GITHUB_OUTPUT
 
       - name: Cache composer dependencies
-        uses: actions/cache@2c8a9bd7457de244a408f35966fab2fb45fda9c8 # v6.0.0
+        uses: actions/cache@27d5ce7f107fe9357f9df03efb73ab90386fccae # v5.0.5
         with:
           path: ${{ steps.composer-cache.outputs.COMPOSER_CACHE_FILES_DIR }}
           key: composer-PHP_${{ matrix.php-version }}-${{ hashFiles('**/composer.json') }}
@@ -73,10 +68,5 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Run Translations Test Suite
-        run: |
-          if [ "${{ github.event_name }}" = "pull_request" ]; then
-            php .github/scripts/continuous-integration --pull-request
-          else
-            php .github/scripts/continuous-integration --push
-          fi
+      - name: Run Upstream Test Suite
+        run: vendor/bin/phpunit --color=always --group=upstream

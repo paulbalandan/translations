@@ -72,7 +72,7 @@ CLI::write(
     'light_gray',
     'red',
 );
-exec($phpunit, $output, $resultCode);
+exec("{$phpunit} --exclude-group=upstream", $output, $resultCode);
 
 $untranslatedLocales = [];
 

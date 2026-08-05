@@ -36,7 +36,8 @@
     "autoload-dev": {
         "psr-4": {
             "Translations\\Tests\\": "tests/Language/",
-            "Translations\\Tests\\AutoReview\\": "tests/AutoReview"
+            "Translations\\Tests\\AutoReview\\": "tests/AutoReview",
+            "Translations\\Tests\\Upstream\\": "tests/Upstream"
         }
     },
     "config": {

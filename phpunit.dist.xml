@@ -18,6 +18,9 @@
         <testsuite name="Language Test Suite">
             <directory suffix="Test.php">tests/Language</directory>
         </testsuite>
+        <testsuite name="Upstream Test Suite">
+            <directory suffix="Test.php">tests/Upstream</directory>
+        </testsuite>
     </testsuites>
 
     <source ignoreIndirectDeprecations="true" restrictNotices="true" restrictWarnings="true">

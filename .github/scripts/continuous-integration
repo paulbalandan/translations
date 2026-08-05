@@ -31,15 +31,22 @@ if (! in_array($event, ['--pull-request', '--push'], true)) {
     exit(1);
 }
 
-$files = shell_exec($event === '--pull-request'
+$command = $event === '--pull-request'
     ? 'git diff --name-only --diff-filter=ACMRTUXB origin/develop..HEAD'
-    : 'git diff --name-only --diff-filter=ACMRTUXB HEAD~..HEAD');
+    : 'git diff --name-only --diff-filter=ACMRTUXB HEAD~..HEAD';
 
-if (! is_string($files)) {
-    CLI::error('Unable to retrieve the list of changed files.', 'light_gray', 'red');
+$output     = [];
+$resultCode = 0;
+
+exec($command, $output, $resultCode);
+
+if ($resultCode !== 0) {
+    CLI::error(sprintf('Unable to retrieve the list of changed files. "%s" exited with code %d.', $command, $resultCode), 'light_gray', 'red');
 
     exit(1);
 }
+
+$files = implode("\n", $output);
 
 $isCIAffected    = str_contains($files, '.github/scripts/continuous-integration');
 $isBuildAffected = str_contains($files, '.github/workflows/build.yml');
@@ -78,10 +85,11 @@ if ($count === 0 && ! ($isCIAffected || $isBuildAffected || $isTestAffected)) {
     exit(0);
 }
 
+$returns = 0;
+
 // Check this first to account for new ICU locale additions
 if ($count > 0 && $count < count(AbstractTranslationTestCase::$locales)) {
-    $returns = 0;
-    $return  = 0;
+    $return = 0;
 
     foreach ($locales as $locale) {
         $class = array_search($locale, AbstractTranslationTestCase::$locales, true);
@@ -109,7 +117,6 @@ if ($count > 0 && $count < count(AbstractTranslationTestCase::$locales)) {
 } elseif ($count === count(AbstractTranslationTestCase::$locales) || $isCIAffected || $isBuildAffected || $isTestAffected) {
     $count = count(AbstractTranslationTestCase::$locales);
     ob_start();
-    $returns = 0;
 
     CLI::write('Testing all language files in all locales.', 'black', 'yellow');
 
@@ -124,7 +131,7 @@ if ($count > 0 && $count < count(AbstractTranslationTestCase::$locales)) {
         CLI::write(sprintf("Reason: %s\n", $reasonMessage), 'black', 'yellow');
     }
 
-    passthru("{$phpunit} --color=always --exclude-group=auto-review", $returns);
+    passthru("{$phpunit} --color=always --exclude-group=auto-review --exclude-group=upstream", $returns);
 
     $result = ob_get_clean();
     $failed = [];
