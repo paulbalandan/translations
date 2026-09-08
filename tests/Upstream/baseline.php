@@ -86,6 +86,7 @@ return [
         'invalidExpiresTime',
         'invalidExpiresValue',
         'invalidCookieName',
+        'invalidCookieValue',
         'emptyCookieName',
         'invalidSecurePrefix',
         'invalidHostPrefix',
